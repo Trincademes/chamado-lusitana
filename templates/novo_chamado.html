@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Novo Chamado</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+    <div class="card w-100" style="max-width: 600px;">
+        <div class="card-body">
+            <h3 class="card-title text-center mb-4">Novo Chamado</h3>
+            <form method="POST" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label>Sistema</label>
+                    <input type="text" name="sistema" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label>Nº Registro</label>
+                    <input type="number" name="num_registro" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label>Nº NF</label>
+                    <input type="number" name="numero_nf" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label>Tipo de Operação</label>
+                    <input type="text" name="tipo_operacao" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label>Tipo de Chamado</label>
+                    <input type="text" name="tipo_chamado" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label>Descrição</label>
+                    <textarea name="descricao" class="form-control" minlength="256" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label>Anexar Print</label>
+                    <input type="file" name="print" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Salvar Chamado</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

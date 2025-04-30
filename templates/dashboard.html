@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Chamados</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Chamados</h2>
+        <a href="/novo_chamado" class="btn btn-primary">Novo Chamado</a>
+    </div>
+    <table class="table table-bordered table-striped bg-white">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Sistema</th>
+                <th>Status</th>
+                <th>Descrição</th>
+                <th>Data</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for chamado in chamados %}
+            <tr>
+                <td>#{{ chamado.id }}</td>
+                <td>{{ chamado.sistema }}</td>
+                <td>{{ chamado.status }}</td>
+                <td>{{ chamado.descricao[:60] }}...</td>
+                <td>{{ chamado.data.strftime('%d/%m/%Y %H:%M') }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
