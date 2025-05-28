@@ -4,6 +4,7 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import os
+import pytz
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///chamados.db'
@@ -22,9 +23,13 @@ class Usuario(UserMixin, db.Model):
     username = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
 
+def brasilia_time():
+    tz = pytz.timezone('America/Sao_Paulo')
+    return datetime.now(tz)
+
 class Chamado(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    data = db.Column(db.DateTime, default=datetime.utcnow)
+    data = db.Column(db.DateTime, default=brasilia_time)
     sistema = db.Column(db.String(10), nullable=False)
     user = db.Column(db.String(20), nullable=False)
     num_registro = db.Column(db.Integer, nullable=False)
