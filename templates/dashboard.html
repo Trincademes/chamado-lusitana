@@ -3,36 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <title>Chamados</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/minty/bootstrap.min.css">
 </head>
-<body class="bg-light">
-<div class="container py-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<body>
+    <style>
+        body {
+            background-color: #e8f5e9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: auto;
+            width: auto;
+            margin: 5px;
+            text-align: center;
+        }
+        h2 {
+            color: #388e3c;
+        }
+        table {
+            width: 100%;
+        }
+        .btn-personalizado {
+            background: linear-gradient(to right, rgba(205, 220, 57, .25), #388e3c);
+            color: #000;
+            font-weight: bold;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        .btn-personalizado:hover {
+            background: linear-gradient(to right, #788879, #62d83a);
+            transform: scale(1.05);
+            color: #fff;
+        }
+        table thead {
+            background-color: #388e3c;
+            color: #fff;
+        }
+        table tbody tr:nth-child(even) {
+            background-color: #e8f5e9;
+        }
+        table tbody tr:nth-child(odd) {
+            background-color: #fffde7;
+        }
+    </style>
+    <div>
         <h2>Chamados</h2>
-        <a href="/novo_chamado" class="btn btn-primary">Novo Chamado</a>
+        <table class="table table-bordered table-striped bg-white">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Usuário</th>
+                    <th>Sistema</th>
+                    <th>Status</th>
+                    <th>Numero do Registro</th>
+                    <th>Numero do NF</th>
+                    <th>Tipo de Operação</th>
+                    <th>Tipo de Chamado</th>
+                    <th>Descrição</th>
+                    <th>Data</th>
+                    <th>Visualizar Print</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for chamado in chamados %}
+                <tr>
+                    <td>#{{ chamado.id }}</td>
+                    <td>{{ chamado.user }}</td>
+                    <td>{{ chamado.sistema }}</td>
+                    <td>
+                        <select class="form-control status-select" data-id="{{ chamado.id }}">
+                            <option value="ABERTO" {% if chamado.status == 'ABERTO' %}selected{% endif %}>ABERTO</option>
+                            <option value="FECHADO" {% if chamado.status == 'FECHADO' %}selected{% endif %}>FECHADO</option>
+                            <option value="CANCELADO" {% if chamado.status == 'CANCELADO' %}selected{% endif %}>CANCELADO</option>
+                        </select>
+                    </td>
+                    
+                    <td>{{ chamado.num_registro }}</td>
+                    <td>{{ chamado.numero_nf }}</td>
+                    <td>{{ chamado.tipo_operacao }}</td>
+                    <td>{{ chamado.tipo_chamado }}</td>
+                    <td>{{ chamado.descricao[:60] }}...</td>
+                    <td>{{ chamado.data.strftime('%d/%m/%Y %H:%M') }}</td>
+                    <td>
+                        {% if chamado.print_path %}
+                            <a href="{{ url_for('static', filename='uploads/' + chamado.print_path) }}" target="_blank">Ver Print</a>
+                        {% else %}
+                            Nenhum print anexado
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <a href="/novo_chamado" class="btn-personalizado">Novo Chamado</a>
     </div>
-    <table class="table table-bordered table-striped bg-white">
-        <thead class="table-dark">
-            <tr>
-                <th>ID</th>
-                <th>Sistema</th>
-                <th>Status</th>
-                <th>Descrição</th>
-                <th>Data</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for chamado in chamados %}
-            <tr>
-                <td>#{{ chamado.id }}</td>
-                <td>{{ chamado.sistema }}</td>
-                <td>{{ chamado.status }}</td>
-                <td>{{ chamado.descricao[:60] }}...</td>
-                <td>{{ chamado.data.strftime('%d/%m/%Y %H:%M') }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.status-select').change(function () {
+            const select = $(this);
+            const id = select.data('id');
+            const novoStatus = select.val();
+
+            $.ajax({
+                url: '/atualizar_status',
+                method: 'POST',
+                data: {
+                    id: id,
+                    status: novoStatus
+                },
+                success: function (resposta) {
+                    console.log(resposta.mensagem);
+                },
+                error: function () {
+                    alert('Erro ao atualizar status.');
+                }
+            });
+        });
+    });
+</script>
+
 </body>
 </html>
